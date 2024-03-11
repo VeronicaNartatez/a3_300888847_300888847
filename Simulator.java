@@ -71,7 +71,13 @@ public class Simulator {
 	 */
 	public Simulator(ParkingLot lot, int perHourArrivalRate, int steps) {
 	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+		this.steps = steps;
+		this.lot = lot;
+
+		this.probabilityOfArrivalPerSec = new Rational(perHourArrivalRate, 3600);
+
+		incomingQ = new LinkedQueue();
+		outgoingQ = new LinkedQueue();
 	}
 
 
@@ -82,13 +88,54 @@ public class Simulator {
 	 */
 	public void simulate() {
 	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
-	
+		this.clock = 0;
+
+		while (clock < steps) {
+
+			if (RandomGenerator.eventOccurred(probabilityOfArrivalPerSec)) {
+				Spot parkedCar = new Spot(RandomGenerator.generateRandomCar(), clock);
+				incomingQ.enqueue(parkedCar);
+			}
+
+			for (int i = 0; i < lot.getNumRows(); i++) {
+				for (int j = 0; j < lot.getNumSpotsPerRow(); j++) {
+
+					Spot parked = lot.getSpotAt(i,j);
+
+					if (parked != null) {
+
+						int duration = clock - parked.getTimestamp();
+
+						if (duration == MAX_PARKING_DURATION) {
+							lot.remove(i,j);
+							outgoingQ.enqueue(parked);
+
+						} else if (duration < MAX_PARKING_DURATION) {
+							if (RandomGenerator.eventOccurred(departurePDF.pdf(j))) {
+								lot.remove(i,j);
+								outgoingQ.enqueue(parked);
+							}
+						}
+					}
+				}
+			}
+
+			if (incomingQ.peek() != null) {
+
+				Car newCar = incomingQ.dequeue().getCar();
+				lot.attemptParking(newCar,clock);
+				System.out.println(newCar + "ENTERED at timestep" + clock + " ;occupancy is at " + lot.getTotalOccupancy());
+			}
+
+			if (outgoingQ.peek() != null) {
+				Car newCar = outgoingQ.dequeue.getCar();
+				System.out.println(newCar + " EXITED at timestep " + clock + "; occupancy is at " + lot.getTotalOccupancy());
+			}
+			clock++;
+		}
 	}
 
 	public int getIncomingQueueSize() {
-	
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
-	
+		return incomingQ.size();
 	}
 }

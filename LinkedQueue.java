@@ -21,16 +21,20 @@ public class LinkedQueue<D> implements Queue<D> {
 		}
 	}
 
+
 	private Elem<D> front;
 	private Elem<D> rear;
+
 
 	public LinkedQueue() {
 		front = rear = null;
 	}
 
+
 	public boolean isEmpty() {
 		return front == null;
 	}
+
 
 	public void enqueue(D newElement) {
 
@@ -70,12 +74,29 @@ public class LinkedQueue<D> implements Queue<D> {
 	}
 
 	public D peek() {
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+
+		if (this.isEmpty()) {
+			throw new NullPointerException();
+
+		} else {
+			return this.front;
+		}
 	}
 
+
 	public int size() {
-		throw new UnsupportedOperationException("This method has not been implemented yet!");
+		
+		int size = 0;
+		Elem<D> tempNode = this.front;
+
+		while (tempNode != null) {
+			size++;
+
+			tempNode = tempNode.next;
+		}
+		return size;
 	}
+
 
 	public String toString() {
 

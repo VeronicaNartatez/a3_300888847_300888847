@@ -25,14 +25,13 @@ public class ParkingLot {
 	public ParkingLot(int capacity) {
 
 		if (capacity < 0) {
-		
-			// Hint: throw a suitable exception here.
-		
+			throw new ArithmeticException();
 		}
 
 		this.capacity = capacity;
 		this.occupancy = new SinglyLinkedList<Spot>();
 	}
+
 
 	/**
 	 * Parks a car (c) in the parking lot.
