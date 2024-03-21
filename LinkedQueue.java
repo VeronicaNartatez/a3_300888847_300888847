@@ -40,13 +40,11 @@ public class LinkedQueue<D> implements Queue<D> {
 
 		if (newElement == null) {
 			throw new NullPointerException("no null object in my queue !");
-			// could have been IllegalArgumentException but NPE seems
-			// to be the norm
 		}
 
 		Elem<D> newElem;
 		newElem = new Elem<D>(newElement, null);
-		if (isEmpty()) {
+		if (this.isEmpty()) {
 			front = newElem;
 			rear = newElem;
 		} else {
@@ -57,7 +55,7 @@ public class LinkedQueue<D> implements Queue<D> {
 
 	public D dequeue() {
 
-		if (isEmpty()) {
+		if (this.isEmpty()) {
 			throw new IllegalStateException("Dequeue method called on an empty queue");
 		}
 
@@ -79,7 +77,7 @@ public class LinkedQueue<D> implements Queue<D> {
 			throw new NullPointerException();
 
 		} else {
-			return this.front;
+			return this.front.value;
 		}
 	}
 

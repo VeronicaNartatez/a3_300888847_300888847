@@ -3,34 +3,44 @@ public class CapacityOptimizer {
 
 	private static final double THRESHOLD = 5.0d;
 
+	private static int average = 0;
+
 	public static int getOptimalNumberOfSpots(int hourlyRate) {
 	
 		int lotSize = 1;
 		int sum = 0;
+		int numberOfRuns = 0;
 
 		while (true) {
-			while (NUM_RUNS != 0) {
+
+			System.out.println("==== Setting Lot Capacity to: " + lotSize + "====");	
+
+			while (numberOfRuns != NUM_RUNS) {
 
 				ParkingLot parkingLot = new ParkingLot(lotSize);
 				Simulator simulatorCar = new Simulator(parkingLot, hourlyRate, 86400);
 
 				simulatorCar.simulate();
 
-				LinkedQueue incomingQ = new LinkedQueue();
-				sum += incomingQ.size();
+				System.out.println("Simulation run " + (numberOfRuns + 1) "; Queue length at the end of the simulation run: " + carThing.getIncomingQueueSize());
+				sum += carThing.getIncomingQueueSize();
+				numberOfRuns += 1;
 			}
 
-			Simulator average = new Simulator(parkingLot, hourlyRate, 86400);
-			average = sum / NUM_RUNS;
+			average = sum / numberOfRuns;
+			numberOfRuns = 0;
 
 			if (average <= THRESHOLD) {
 				System.out.println("The lot is large enough to meet demand.");
 				break;
 
 			} else {
-				lotSize += 1;
+				lotSize = lotSize + 1;
+				average = 0;
+				sum = 0;
 			}
 		}
+		return lotSize;
 	}
 
 
